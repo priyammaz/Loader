@@ -23,6 +23,24 @@ def prepare_coco(path_to_root=None):
     link_to_val_data = "http://images.cocodataset.org/zips/val2017.zip"
     link_to_annotations = "http://images.cocodataset.org/annotations/annotations_trainval2017.zip"
 
+    path_to_root = os.path.join(path_to_root, "coco2017")
+
+    if not os.path.isdir(path_to_root):
+        os.mkdir(path_to_root)
+        for link in [link_to_train_data, link_to_val_data, link_to_annotations]:
+            print("Downloading", link)
+            path_to_download = os.path.join(path_to_root, link.split("/")[-1])
+            download(link, path_to_download, progress_bar=True)
+
+            print("Unpacking Zip File")
+            with zipfile.ZipFile(path_to_download, "r") as zip:
+                zip.extractall(path_to_root)
+
+            for file in os.listdir(path_to_root):
+                if ".zip" in file:
+                    os.remove(os.path.join(path_to_root, file))
+
+
 def prepare_imagenet(path_to_root=None):
     pass
 
@@ -317,6 +335,28 @@ def prepare_wikipedia(path_to_root=None):
 ## MULTIMODAL DATASETS ##
 #########################
 
+def prepare_coco(path_to_root=None):
+    link_to_train_data = "http://images.cocodataset.org/zips/train2017.zip"
+    link_to_val_data = "http://images.cocodataset.org/zips/val2017.zip"
+    link_to_annotations = "http://images.cocodataset.org/annotations/annotations_trainval2017.zip"
+
+    path_to_root = os.path.join(path_to_root, "coco2017")
+
+    if not os.path.isdir(path_to_root):
+        os.mkdir(path_to_root)
+        for link in [link_to_train_data, link_to_val_data, link_to_annotations]:
+            print("Downloading", link)
+            path_to_download = os.path.join(path_to_root, link.split("/")[-1])
+            download(link, path_to_download, progress_bar=True)
+
+            print("Unpacking Zip File")
+            with zipfile.ZipFile(path_to_download, "r") as zip:
+                zip.extractall(path_to_root)
+
+            for file in os.listdir(path_to_root):
+                if ".zip" in file:
+                    os.remove(os.path.join(path_to_root, file))
+                    
 def prepare_flikr8k(path_to_root):
     pass
 
@@ -360,7 +400,8 @@ dataset_catalog = {
     
     "multimodal_datasets": {
 
-        "flikr8k": {"prepare": prepare_flikr8k, "src": "kaggle"}
+        "flikr8k": {"prepare": prepare_flikr8k, "src": "kaggle"}, 
+        "coco2017": {"prepare": prepare_coco, "src": "wget"}
 
     }
 
